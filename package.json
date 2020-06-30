@@ -81,7 +81,7 @@
 		"@types/hapi__boom": "^9.0.1",
 		"@types/hapi__hapi": "^19.0.2",
 		"@types/hapi__joi": "^16.0.12",
-		"@types/jest": "^25.1.4",
+		"@types/jest": "^26.0.0",
 		"@types/node": "^13.9.5",
 		"@types/prettier": "^1.19.1",
 		"@types/rimraf": "^3.0.0",
