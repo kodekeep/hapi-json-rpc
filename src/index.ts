@@ -33,6 +33,10 @@ export const plugin = {
 		}
 
 		server.ext("onPreHandler", (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
+			if (request.path !== "/" || request.method !== "post") {
+				return h.continue;
+			}
+
 			if (request.headers["content-type"]) {
 				const contentMedia: Record<string, any> = MediaType.fromString(request.headers["content-type"]);
 
