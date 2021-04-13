@@ -11,4 +11,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - initial release
 
-[Unreleased]: https://github.com/konceiver/hapi-json-rpc/compare/master...develop
+[unreleased]: https://github.com/konceiver/hapi-json-rpc/compare/master...develop

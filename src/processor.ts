@@ -2,18 +2,38 @@ import { Server } from "@hapi/hapi";
 import { Schema } from "@hapi/joi";
 import get from "dlv";
 
-import { IProcessorOptions, IRequestParameters, IResponse, IResponseError, IValidationResult } from "./interfaces";
+import {
+	IProcessorOptions,
+	IRequestParameters,
+	IResponse,
+	IResponseError,
+	IValidationResult,
+} from "./interfaces";
 
 export class Processor {
-	public constructor(private readonly server: Server, private readonly options: IProcessorOptions) {}
+	public constructor(
+		private readonly server: Server,
+		private readonly options: IProcessorOptions
+	) {}
 
-	public async resource<T = any>(payload: IRequestParameters): Promise<IResponse<T> | IResponseError> {
+	public async resource<T = any>(
+		payload: IRequestParameters
+	): Promise<IResponse<T> | IResponseError> {
 		const { method, params, id } = payload;
 
 		try {
-			const { error } = this.options.validate
-				? this.options.validate(payload || {}, this.options?.schema as object)
-				: (((this.options.schema as Schema).validate(payload || {}) as unknown) as IValidationResult);
+			let error: string | undefined;
+
+			if (this.options.validate) {
+				error = this.options.validate(
+					payload || {},
+					this.options?.schema as object
+				).error;
+			} else {
+				error = (((this.options.schema as Schema).validate(
+					payload || {}
+				) as unknown) as IValidationResult).error;
+			}
 
 			if (error) {
 				return this.createErrorResponse(payload?.id, -32600, new Error(error));
@@ -22,7 +42,11 @@ export class Processor {
 			const targetMethod = get(this.server.methods, method);
 
 			if (!targetMethod) {
-				return this.createErrorResponse(id, -32601, new Error("The method does not exist / is not available."));
+				return this.createErrorResponse(
+					id,
+					-32601,
+					new Error("The method does not exist / is not available.")
+				);
 			}
 
 			// @ts-ignore
@@ -39,15 +63,23 @@ export class Processor {
 
 			const result = await targetMethod(params);
 
-			return result.isBoom
-				? this.createErrorResponse(id, result.output.statusCode, result.output.payload)
-				: this.createSuccessResponse(id, result);
+			if (result.isBoom) {
+				return this.createErrorResponse(
+					id,
+					result.output.statusCode,
+					result.output.payload
+				);
+			}
+
+			return this.createSuccessResponse(id, result);
 		} catch (error) {
 			return this.createErrorResponse(id, -32603, error);
 		}
 	}
 
-	public async collection<T = any>(payloads: IRequestParameters[]): Promise<Array<IResponse<T>> | IResponseError[]> {
+	public async collection<T = any>(
+		payloads: IRequestParameters[]
+	): Promise<Array<IResponse<T>> | IResponseError[]> {
 		const results = [];
 
 		for (const payload of payloads) {
@@ -58,7 +90,10 @@ export class Processor {
 		return results;
 	}
 
-	private createSuccessResponse<T = any>(id: string | number, result: T): IResponse<T> {
+	private createSuccessResponse<T = any>(
+		id: string | number,
+		result: T
+	): IResponse<T> {
 		return {
 			id,
 			jsonrpc: "2.0",
@@ -66,7 +101,11 @@ export class Processor {
 		};
 	}
 
-	private createErrorResponse(id: string | number, code: number, error: Error): IResponseError {
+	private createErrorResponse(
+		id: string | number,
+		code: number,
+		error: Error
+	): IResponseError {
 		return {
 			error: {
 				code,

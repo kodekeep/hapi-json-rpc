@@ -16,22 +16,18 @@ class Config {
 						method: Joi.func().required(),
 						name: Joi.string().required(),
 						schema: Joi.object(),
-					}),
+					})
 				)
 				.required(),
 			processor: Joi.object()
 				.keys({
 					schema: Joi.object().default(
 						Joi.object().keys({
-							id: Joi.alternatives()
-								.try(Joi.number(), Joi.string())
-								.required(),
-							jsonrpc: Joi.string()
-								.allow("2.0")
-								.required(),
+							id: Joi.alternatives().try(Joi.number(), Joi.string()).required(),
+							jsonrpc: Joi.string().allow("2.0").required(),
 							method: Joi.string().required(),
 							params: Joi.object(),
-						}),
+						})
 					),
 					validate: Joi.function(),
 				})
