@@ -135,6 +135,7 @@ test("should receive a response failure due to validation error (AJV)", async ()
 				try {
 					const ajv = new Ajv({
 						$data: true,
+						// @ts-ignore
 						extendRefs: true,
 						removeAdditional: true,
 					});

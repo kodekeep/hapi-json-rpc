@@ -52,6 +52,7 @@ class Config {
 	}
 
 	public set(key: string, value: any): void {
+		// @ts-ignore
 		set(this.config, key, value);
 	}
 
