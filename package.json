@@ -39,7 +39,7 @@
 		"@types/dlv": "^1.1.2",
 		"@types/hapi": "^18.0.5",
 		"@types/hapi__boom": "^9.0.1",
-		"@types/hapi__hapi": "^20.0.7",
+		"@types/hapi__hapi": "^20.0.8",
 		"@types/hapi__joi": "^17.1.6",
 		"ajv": "^8.1.0"
 	},
