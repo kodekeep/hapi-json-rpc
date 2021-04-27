@@ -44,55 +44,6 @@ await server.register({
 });
 ```
 
-### AJV
-
-```ts
-import * as plugin from "@konceiver/hapi-json-rpc";
-import Ajv from "ajv";
-
-await server.register({
-	plugin,
-	options: {
-		methods: [...],
-		processor: {
-			schema: {
-				properties: {
-					id: {
-						type: ["number", "string"],
-					},
-					jsonrpc: {
-						pattern: "2.0",
-						type: "string",
-					},
-					method: {
-						type: "string",
-					},
-					params: {
-						type: "object",
-					},
-				},
-				required: ["jsonrpc", "method", "id"],
-				type: "object",
-			},
-			validate(data: object, schema: object) {
-				try {
-					const ajv = new Ajv({
-						$data: true,
-						extendRefs: true,
-						removeAdditional: true,
-					});
-
-					ajv.validate(schema, data);
-
-					return { value: data, error: ajv.errors !== null ? ajv.errorsText() : null };
-				} catch (error) {
-					return { value: null, error: error.stack };
-				}
-			},
-	},
-});
-```
-
 ## Testing
 
 ```bash
